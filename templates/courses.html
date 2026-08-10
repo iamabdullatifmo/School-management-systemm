@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Courses</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      color: #007BFF;
+    }
+    table {
+      width: 80%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #007BFF;
+      color: #fff;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    .status {
+      color: #28a745;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Available Courses (First 7)</h2>
+
+  <table>
+    <tr>
+      <th>Course ID</th>
+      <th>Course Name</th>
+      <th>Credit Hours</th>
+      <th>Status</th>
+    </tr>
+    {% for course in courses %}
+    <tr>
+      <td>{{ course.course_id }}</td>
+      <td>{{ course.course_name }}</td>
+      <td>{{ course.credit_h }}</td>
+      <td class="status">Registered</td> 
+    </tr>
+    {% endfor %}
+  </table>
+
+</body>
+</html>

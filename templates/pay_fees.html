@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Registration</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 500px;
+      margin: 80px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    p {
+      font-size: 16px;
+      margin-bottom: 25px;
+      color: #555;
+    }
+    button {
+      width: 45%;
+      padding: 10px;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button[value="yes"] {
+      background: #28a745;
+      color: #fff;
+    }
+    button[value="yes"]:hover {
+      background: #218838;
+    }
+    button[value="no"] {
+      background: #dc3545;
+      color: #fff;
+    }
+    button[value="no"]:hover {
+      background: #c82333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Course Registration</h1>
+    <form method="POST" action="{{ url_for('courses.courses') }}">
+      <p>Pay fees before you can register courses</p>
+      <button type="submit" name="submit" value="yes">Yes</button>
+      <button type="submit" name="submit" value="no">No</button>
+    </form>
+  </div>
+</body>
+</html>

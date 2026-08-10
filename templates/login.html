@@ -1,0 +1,39 @@
+{% extends "index.html" %}
+{% with messages = get_flashed_messages()%}
+    {%for msg in messages%}
+        {%if msg%}
+        {{msg}}
+
+        {%endif%}
+    {%endfor%}
+{%endwith%}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card custom-card">
+            <div class="card-body p-5">
+                <h2 class="text-center text-success mb-4">
+                    Login
+                </h2>
+
+                <form method="POST">
+                    <label class="form-label"> ID</label>
+                    <input type="text" name="_id" class="form-control">
+                    <br>
+
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control">
+                    <br>
+
+                    <button class="btn btn-success w-100">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

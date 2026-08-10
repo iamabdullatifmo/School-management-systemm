@@ -1,0 +1,30 @@
+{% extends "index.html" %}
+
+{% block title %}Lecturer Dashboard{% endblock %}
+
+{% block body %}
+    <style>
+        .dashboard h1 {
+            color: #2c3e50;
+            margin-top: 40px;
+        }
+        .dashboard a {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+    </style>
+
+    <div class="dashboard">
+        <h1>Lecturer Dashboard</h1>
+        <a href="{{ url_for('change_password.change_lecturer') }}" class="btn btn-primary mt-3">Change Password</a>
+
+        <h1 class="mt-5">Upload Results</h1>
+        <a href="{{ url_for('upload_results.upload_results_view') }}" class="btn btn-success mt-3">Upload Results</a>
+    </div>
+
+    <div class="dashboard">
+        
+    </div>
+{% endblock %}

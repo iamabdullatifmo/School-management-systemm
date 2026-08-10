@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Results</title>
+</head>
+<body>
+    <h2>Students</h2>
+    {% if students %}
+        <form method="POST" action="{{ url_for('upload_results.upload_results_view') }}">
+            <table>
+                <tr><th>Name</th><th>ID</th><th>Grade</th></tr>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.full_Name }}</td>
+                    <td>{{ student._id }}</td>
+                    <td><input type="number" step="0.01" name="grade_{{ student._id }}"></td>
+                </tr>
+                {% endfor %}
+            </table>
+            <button type="submit">Save Grades</button>
+        </form>
+    {% else %}
+        <p>No students found yet. Select a course and department.</p>
+    {% endif %}
+</body>
+</html>

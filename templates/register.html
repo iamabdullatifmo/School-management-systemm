@@ -1,0 +1,36 @@
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card custom-card">
+            <div class="card-body p-5">
+
+                <h2 class="text-center text-success mb-4">
+                    Choose Registration Type
+                </h2>
+
+               <form method="POST" action="{{ url_for('register.register') }}">
+    <div class="mb-3">
+        <label class="form-label">Select User Type</label>
+        <select name="user_type" class="form-select">
+            <option value="" disabled selected>-- Select --</option>
+            <option value="student">Register as Student</option>
+            <option value="lecturer">Register as Lecturer</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success w-100">
+        Continue
+    </button>
+</form>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

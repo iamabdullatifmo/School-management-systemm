@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturer Department & Courses</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        form {
+            background: #fff;
+            padding: 25px 35px;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            width: 600px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+            color: #333;
+        }
+
+        select, input[type="checkbox"] {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <form action="" method="POST">
+        <!-- Department dropdown -->
+        <label for="department">Choose a department:</label>
+        <select name="department" id="department">  
+            <option value="computer science">Computer Science</option>
+            <option value="mathematics">Mathematics</option>
+            <option value="physics">Physics</option>
+            <option value="english">English & Communication Studies</option>
+            <option value="electrical">Electrical & Electronic Engineering</option>
+            <option value="biology">Biological Sciences</option>
+            <option value="mechanical">Mechanical Engineering</option>
+        </select>
+
+        <!-- Courses table with checkboxes -->
+        <label>Choose courses you can teach:</label>
+        <table>
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>Course ID</th>
+                    <th>Course Name</th>
+                    <th>Credit Hours</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="checkbox" name="courses" value="CSC101"></td>
+                    <td>CSC101</td>
+                    <td>Intro to Computer Science</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="courses" value="MTH201"></td>
+                    <td>MTH201</td>
+                    <td>Calculus II</td>
+                    <td>4</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="courses" value="PHY103"></td>
+                    <td>PHY103</td>
+                    <td>Physics I</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="courses" value="ENG104"></td>
+                    <td>ENG104</td>
+                    <td>English Composition</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="courses" value="DBS201"></td>
+                    <td>DBS201</td>
+                    <td>Database Systems</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="courses" value="WEB202"></td>
+                    <td>WEB202</td>
+                    <td>Web Development</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="courses" value="AI301"></td>
+                    <td>AI301</td>
+                    <td>Artificial Intelligence</td>
+                    <td>4</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <input type="submit" id="submit" value="Submit">
+    </form>
+</body>
+</html>

@@ -1,0 +1,79 @@
+{% extends "index.html" %}
+
+{% block title %}
+Student Registration
+{% endblock %}
+
+{% block body %}
+
+<div class="row justify-content-center">
+
+```
+<div class="col-md-8">
+
+    <div class="card custom-card">
+
+        <div class="card-body p-5">
+
+            <h2 class="text-center text-primary mb-4">
+                Student Registration
+            </h2>
+
+            <form method="POST">
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <label class="form-label">First Name</label>
+                        <input type="text"
+                               name="first"
+                               class="form-control">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Last Name</label>
+                        <input type="text"
+                               name="last"
+                               class="form-control">
+                    </div>
+
+                </div>
+
+                <br>
+
+                <label class="form-label">Email</label>
+                <input type="email"
+                       name="email"
+                       class="form-control">
+
+                <br>
+
+                <label class="form-label">Department</label>
+
+                <select name="department"
+                        class="form-select">
+
+                    <option>computer science</option>
+                    <option>Engineering</option>
+                    <option>Business</option>
+
+                </select>
+
+                <br>
+
+                <button class="btn btn-primary w-100">
+                    Register
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+```
+
+</div>
+
+{% endblock %}

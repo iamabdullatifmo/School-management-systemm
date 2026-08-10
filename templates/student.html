@@ -1,0 +1,88 @@
+{% extends "index.html" %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block body %}
+    <style>
+        body {
+            background-color: #f4f6f9;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .dashboard {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .dashboard h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .profile-card {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .profile-card h3 {
+            margin: 0;
+            color: #3498db;
+        }
+
+        .profile-card p {
+            margin: 5px 0;
+            color: #34495e;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+    </style>
+
+    <div class="dashboard">
+        <h1>Welcome to Your Dashboard</h1>
+
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <h3>{{ student.full_Name }}</h3>
+            <p><strong>Email:</strong> {{ student.email }}</p>
+            <p><strong>Department:</strong> {{ student.department }}</p>
+            <p><strong>Student ID:</strong> {{ student._id }}</p>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="nav-links">
+            <a href="{{ url_for('change_password.change_student') }}">Change Password</a>
+            <a href="{{ url_for('bio.bio') }}">Bio</a>
+            <a href="{{ url_for('courses.courses') }}">View Courses</a>
+            <a href="{{ url_for('check_result.check_results') }}">Check Results</a>
+        </nav>
+    </div>
+{% endblock %}
