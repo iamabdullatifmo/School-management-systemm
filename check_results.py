@@ -52,6 +52,6 @@ def check_results():
         # Final GPA/CGPA
         if total_credit_h > 0:
             gpa = total_points / total_credit_h
-            cgpa = gpa  # or cumulative across semesters if you track that
+            cgpa = gpa 
 
     return render_template("check_results.html", grades=grades, gpa=gpa, cgpa=cgpa)
