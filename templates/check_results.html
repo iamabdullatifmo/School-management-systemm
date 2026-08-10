@@ -12,7 +12,7 @@
             padding: 40px;
         }
         .results-container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: auto;
             background: #fff;
             padding: 30px;
@@ -41,6 +41,12 @@
         tr:hover {
             background-color: #f1f1f1;
         }
+        .summary {
+            margin-top: 20px;
+            text-align: left;   /* ✅ align text to the left */
+            font-weight: bold;
+            color: #2c3e50;
+        }
         .no-results {
             text-align: center;
             color: #e74c3c;
@@ -57,22 +63,30 @@
                 <thead>
                     <tr>
                         <th>Course</th>
+                        <th>Credit Hours</th>
                         <th>Grade</th>
-                        <th>GPA</th>
-                        <th>CGPA</th>
+                        <th>Letter</th>
+                        <th>Grade Point</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for grade in grades %}
                         <tr>
                             <td>{{ grade.course_id }}</td>
+                            <td>{{ grade.credit_h }}</td>
                             <td>{{ grade.grade }}</td>
-                            <td>{{ grade.gpa }}</td>
-                            <td>{{ grade.cgpa }}</td>
+                            <td>{{ grade.letter }}</td>
+                            <td>{{ grade.point }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
+
+            <!-- ✅ GPA/CGPA summary aligned left -->
+            <div class="summary">
+                Overall GPA: {{ "%.2f"|format(gpa) }} <br>
+                Cumulative GPA (CGPA): {{ "%.2f"|format(cgpa) }}
+            </div>
         {% else %}
             <p class="no-results">No grades found.</p>
         {% endif %}

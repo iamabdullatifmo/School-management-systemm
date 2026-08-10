@@ -9,6 +9,11 @@ def courses():
          if request.method == "POST":
               student_id = session.get("student_id")
               answer = request.form.get("submit")
+             # Check if student already registered courses
+            #  existing_courses = StudentCourses.query.filter_by(student_id=student_id).all()
+             # if first_seven:
+                #  return render_template("courses.html", courses=first_seven)
+
               if answer == "yes":
                   first_seven = Courses.query.limit(7).all()
                   #Store courses in the student_courses table
