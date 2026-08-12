@@ -5,7 +5,7 @@
   <title>Upload Results</title>
   <style>
     body { font-family: 'Segoe UI', Arial, sans-serif; background:#f0f2f5; margin:0; padding:0; }
-    .container { max-width:900px; margin:40px auto; background:#fff; padding:30px; border-radius:10px; box-shadow:0 6px 12px rgba(0,0,0,.1); }
+    .container { max-width:1000px; margin:40px auto; background:#fff; padding:30px; border-radius:10px; box-shadow:0 6px 12px rgba(0,0,0,.1); }
     h1, h2 { text-align:center; color:#333; margin-bottom:20px; }
     label { font-weight:600; margin-top:15px; display:block; color:#444; }
     select, input[type="text"], button {
@@ -14,13 +14,13 @@
     }
     button { background:#007bff; color:#fff; font-weight:bold; cursor:pointer; transition:background .3s ease; }
     button:hover { background:#0056b3; }
-    ul { list-style:none; padding:0; }
-    li { padding:10px; border-bottom:1px solid #eee; display:flex; align-items:center; justify-content:space-between; }
-    .student-name { flex:1; font-weight:500; color:#333; }
-    .grade-input { flex:0 0 180px; padding:8px; border-radius:6px; border:1px solid #ccc; }
+    table { width:100%; border-collapse:collapse; margin-top:20px; }
+    th, td { padding:10px; border-bottom:1px solid #eee; text-align:left; }
+    th { background:#007bff; color:#fff; }
     .messages { margin:15px 0; padding:12px 16px; border-radius:6px; font-weight:500; }
     .messages.success { background:#d4edda; color:#155724; border:1px solid #c3e6cb; }
     .messages.error { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
+    .pending { color:#e74c3c; font-weight:bold; }
   </style>
 </head>
 <body>
@@ -61,21 +61,47 @@
 
     <!-- Student list & grade inputs -->
     {% if students %}
-      <h2>Enter Grades</h2>
+      <h2>Update Grades</h2>
       <form method="POST" action="{{ url_for('upload_results.upload_results_view') }}">
         <input type="hidden" name="department" value="{{ request.form.get('department') or request.args.get('department') }}">
         <input type="hidden" name="course" value="{{ request.form.get('course') or request.args.get('course') }}">
 
-        <ul>
-          {% for student in students %}
-            <li>
-              <span class="student-name">{{ student.full_Name }}</span>
-              <input type="hidden" name="student_id_{{ student._id }}" value="{{ student._id }}">
-              <input type="text" name="grade_{{ student._id }}" placeholder="Enter grade" class="grade-input">
-            </li>
-          {% endfor %}
-        </ul>
-        <button type="submit">Save Grades</button>
+        <table>
+          <thead>
+            <tr>
+              <th>Student Name</th>
+              <th>Email</th>
+              <th>Current Grade</th>
+              <th>Update Grade</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for student in students %}
+              {% set existing_grade = None %}
+              {% for g in grades %}
+                {% if g.student_id == student._id %}
+                  {% set existing_grade = g.grade %}
+                {% endif %}
+              {% endfor %}
+              <tr>
+                <td>{{ student.full_Name }}</td>
+                <td>{{ student.email }}</td>
+                <td>
+                  {% if existing_grade %}
+                    {{ existing_grade }}
+                  {% else %}
+                    <span class="pending">Pending</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <input type="hidden" name="student_id_{{ student._id }}" value="{{ student._id }}">
+                  <input type="text" name="grade_{{ student._id }}" value="{{ existing_grade if existing_grade else '' }}" placeholder="Enter grade">
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <button type="submit">Save Changes</button>
       </form>
     {% endif %}
   </div>
