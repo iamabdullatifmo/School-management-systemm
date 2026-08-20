@@ -1,6 +1,6 @@
 from flask import Blueprint,render_template,url_for,redirect,session,flash
-from models import Student,Grades,Courses
-from check_results import grade_letter,grade_point,total_points,total_credit_h
+from models import Student,Grades,Courses,YearsOfStudy,SemesterResults
+from extentions import db
 
 semester_results_bp = Blueprint("semester_results",__name__)
 
@@ -11,14 +11,14 @@ def semester_results():
     cgpa = None
     results = []
     grades = Grades.query.filter_by(student_id=student_id).all()
-    credit_h =Student.query.join(Courses,student_id=student_id).query.filter_by(credit_h).all
-
+    total_points = 0
+    total_credit_h = 0
 
     for g in grades:
          course = Courses.query.get(g.course_id)
          score = float(g.grade)
    
-               # Convert numeric score → letter + grade point
+         # Convert numeric score → letter + grade point
          if score >= 85:
              grade_letter, grade_point = "A+", 5
          elif score >= 80:
@@ -38,18 +38,28 @@ def semester_results():
          else:
               grade_letter, grade_point = "F", 0
    
-         # Attach values for template
-         g.letter = grade_letter
-         g.point = grade_point
-         g.credit_h = course.credit_h
-   
          # Accumulate totals
          total_points += grade_point * course.credit_h
          total_credit_h += course.credit_h
-   
+
+     # next semester
+    last_result = SemesterResults.query.filter_by(student_id=student_id).order_by(SemesterResults.semester.desc()).first()
+    if last_result:
+           next_semester = last_result.semester + 1
+    else:
+          next_semester = 1
+
+    # Calculate CGPA
+    all_results = SemesterResults.query.filter_by(student_id=student_id).all()
+    if all_results:
+        cgpa = sum(r.gpa for r in all_results if r.gpa) / len(all_results)
+    
     # Final GPA/CGPA
     if total_credit_h > 0:
        gpa = total_points / total_credit_h
-       cgpa = gpa 
-
+       
+    sems_results = SemesterResults(student_id=student_id,semester =1,gpa=gpa,cgpa=cgpa) 
+    db.session.add(sems_results)
+    db.session.commit()
+    return render_template("semester_results.html",results=results,gpa=gpa,cgpa=cgpa,semester=next_semester)
 

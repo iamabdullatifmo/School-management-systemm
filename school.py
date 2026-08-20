@@ -24,8 +24,6 @@ app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")
 
 from models import Student,Lecturers,Courses,Department,Grades
 
-
-
 from lecturer import lecturer_bp
 from student_registration import register_student_bp
 from lecturer_registration import register_lecturer_bp
@@ -37,6 +35,8 @@ from courses import courses_bp
 from upload_results import upload_results_bp
 from department import department
 from check_results import check_results_bp
+from semester_results import semester_results_bp
+from admin import admin_bp
 
 
 app.register_blueprint(lecturer_bp,url_prefix="")
@@ -50,6 +50,8 @@ app.register_blueprint(courses_bp,url_prefix="")
 app.register_blueprint(upload_results_bp,url_prefix="/lecturer")
 app.register_blueprint(department,url_prefix="")
 app.register_blueprint(check_results_bp,url_prefix="")
+app.register_blueprint(semester_results_bp,url_prefix="")
+app.register_blueprint(admin_bp,url_prefix="")
 
 app.config["SQLALCHEMY_DATABASE_URI"] ="mysql+pymysql://management:12345@localhost/python"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]= False

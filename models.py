@@ -64,11 +64,15 @@ class StudentCourses(db.Model):
     course_id = db.Column(db.String(10), db.ForeignKey("courses.course_id"))
 
 class SemesterResults(db.Model):   
-     __tablename__ = "semester_results"
-     sem_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-     semester = db.Column(db.Integer)
-     gpa = db.Column(db.Float)
-     cgpa = db.Column(db.Float) 
+    __tablename__ = "semester_results"
+    sem_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    student_id = db.Column(db.Integer, db.ForeignKey("student._id"), nullable=False)
+    semester = db.Column(db.Integer)
+    gpa = db.Column(db.Float)
+    cgpa = db.Column(db.Float)
+
+    student = db.relationship("Student", backref="semester_results")
+
 
 class YearsOfStudy(db.Model):
      __tablename__ = "years_of_study"
@@ -76,7 +80,13 @@ class YearsOfStudy(db.Model):
      student_id = db.Column(db.Integer, db.ForeignKey("student._id"))
      years_of_study = db.Column(db.Integer)
      semester = db.Column(db.Integer)
-    
+
+class Admin(db.Model):
+    __tablename__ = "admin"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    password = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(200), nullable=False)
+
 
 
     
