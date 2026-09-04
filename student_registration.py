@@ -15,6 +15,8 @@ def register_student():
         full_N=first_N + " " + last_N
         department = request.form.get("department")
         years_of_study = int(request.form.get("years_of_study"))
+
+        level = 100
     
         user = Student(first_N=first_N,last_N=last_N,email=email,full_Name=full_N,department=department)
         db.session.add(user)
@@ -34,7 +36,7 @@ def register_student():
         # query and check the department table whose department name matches with the department the student chooses
         dept = Department.query.filter_by(dept_name=user.department).first()
         student_id = session.get("student_id")
-        years= YearsOfStudy(student_id=student_id,years_of_study=years_of_study,semester=1)
+        years= YearsOfStudy(student_id=user._id,years_of_study=years_of_study,semester=1,level = level)
         db.session.add(years)
         db.session.commit()
         # Store the department _id as the same of student _id

@@ -1,5 +1,6 @@
 from extentions import db
 import uuid
+from datetime import date
 
 
 class Lecturers(db.Model):
@@ -80,6 +81,9 @@ class YearsOfStudy(db.Model):
      student_id = db.Column(db.Integer, db.ForeignKey("student._id"))
      years_of_study = db.Column(db.Integer)
      semester = db.Column(db.Integer)
+     date = db.Column(db.Date, default=date.today)
+     level = db.Column(db.Integer)
+     year = db.Column(db.Integer)
 
 class Admin(db.Model):
     __tablename__ = "admin"
