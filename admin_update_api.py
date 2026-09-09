@@ -1,6 +1,6 @@
 from flask import Blueprint,render_template,url_for,session,request,jsonify
-from models import db
-from extentions import YearsOfStudy
+from models import YearsOfStudy
+from extentions import db
 
 
 admin_update_api = Blueprint("admin_update_api", __name__)

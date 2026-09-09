@@ -37,6 +37,7 @@ from department import department
 from check_results import check_results_bp
 from semester_results import semester_results_bp
 from admin import admin_bp
+from admin_update_api import admin_update_api
 
 
 app.register_blueprint(lecturer_bp,url_prefix="")
@@ -52,6 +53,8 @@ app.register_blueprint(department,url_prefix="")
 app.register_blueprint(check_results_bp,url_prefix="")
 app.register_blueprint(semester_results_bp,url_prefix="")
 app.register_blueprint(admin_bp,url_prefix="")
+app.register_blueprint(admin_update_api, url_prefix="")
+
 
 app.config["SQLALCHEMY_DATABASE_URI"] ="mysql+pymysql://management:12345@localhost/python"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]= False
