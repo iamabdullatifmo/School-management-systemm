@@ -63,6 +63,8 @@ class StudentCourses(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     student_id = db.Column(db.Integer, db.ForeignKey("student._id"))
     course_id = db.Column(db.String(10), db.ForeignKey("courses.course_id"))
+    academic_year = db.Column(db.String(20), nullable=False)
+    semester = db.Column(db.Integer, nullable=False)
 
 class SemesterResults(db.Model):   
     __tablename__ = "semester_results"
@@ -90,6 +92,15 @@ class Admin(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     password = db.Column(db.String(100), nullable=False)
     name = db.Column(db.String(200), nullable=False)
+
+class AcademicSession(db.Model):
+    __tablename__ = "academic_session"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    academic_year = db.Column(db.String(20), nullable=False)
+    semester = db.Column(db.Integer, nullable=False)
+    registration_open = db.Column(db.Boolean, default=False)
+
 
 
 

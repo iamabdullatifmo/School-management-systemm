@@ -12,6 +12,15 @@ load_dotenv()
 app=Flask(__name__)
 app.secret_key= os.getenv("SECRET_KEY")
 
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template("error_debug.html"), 500
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template("error.html"), 404
+
+
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
@@ -58,9 +67,12 @@ app.register_blueprint(admin_update_api, url_prefix="")
 
 app.config["SQLALCHEMY_DATABASE_URI"] ="mysql+pymysql://management:12345@localhost/python"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]= False
+app.config["SESSION_PERMANENT"] = False
+
 
 db.init_app(app)
 mail.init_app(app)
+
 
 @app.route("/home")
 @app.route("/")

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, url_for, session, flash, redirect
-from models import YearsOfStudy, Admin
+from models import YearsOfStudy, Admin, AcademicSession
 from extentions import db
 
 admin_bp = Blueprint("admin", __name__)
@@ -16,35 +16,69 @@ def admin_page():
             flash("Invalid admin password.", "error")
             return redirect(url_for("admin.admin_page"))
         session["admin"] = admin.name
-        session["admin"] = True
+        #session["admin"] = True
         return redirect(url_for("admin.admin_update"))
 
     return render_template("admin.html")    
 
 @admin_bp.route("/admin_update", methods=["POST", "GET"])
 def admin_update():
-        admin = session.get("admin")
-        
-        new_semester = request.form.get("semester", type =int)
-        new_year = request.form.get("years", type=int)
 
-        if request.method == "POST":
+    # Make sure admin is logged in
+    if not session.get("admin"):
+        flash("Please login as admin first.", "error")
+        return redirect(url_for("admin.admin_page"))
 
-            # Loop through all the existing students
-            years_of_study = YearsOfStudy.query.all()
-            for students in years_of_study:            
-                if new_semester:
-                    students.semester = new_semester
+    if request.method == "POST":
 
-                    if new_year:
-                        students.year = new_year
+        new_semester = request.form.get("semester", type=int)
+        new_year = request.form.get("years")
 
-                    if students.level < students.years_of_study * 100:
-                        students.level += 100
+        # Validate semester
+        if new_semester not in [1, 2]:
+            flash("Please select a valid semester.", "error")
+            return redirect(url_for("admin.admin_update"))
 
-            db.session.commit()
+        # Validate academic year
+        if not new_year:
+            flash("Please select an academic year.", "error")
+            return redirect(url_for("admin.admin_update"))
 
-            flash("Years of study updated successfully.", "success")
-        return render_template("admin_post.html")
+        # Find the current academic session
+        academic_session = AcademicSession.query.first()
 
+        if academic_session:
 
+            # Update existing session
+            academic_session.academic_year = new_year
+            academic_session.semester = new_semester
+            academic_session.registration_open = True
+
+        else:
+
+            # Create session if one doesn't exist
+            academic_session = AcademicSession(
+                academic_year=new_year,
+                semester=new_semester,
+                registration_open=True
+            )
+
+            db.session.add(academic_session)
+
+        db.session.commit()
+
+        flash(
+            f"Academic session updated to {new_year}, Semester {new_semester}. "
+            "Course registration is now open.",
+            "success"
+        )
+
+        return redirect(url_for("admin.admin_update"))
+
+    # Get current session to display on the page
+    current_session = AcademicSession.query.first()
+
+    return render_template(
+        "admin_post.html",
+        current_session=current_session
+    )

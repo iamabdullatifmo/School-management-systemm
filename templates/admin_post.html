@@ -1,95 +1,438 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Update</title>
-  <style>
+<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academic Session Management</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #eef2f7;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(135deg, #eef4ff, #f8fafc);
+        min-height: 100vh;
+        margin: 0;
+        padding: 30px 15px;
+        color: #333;
     }
 
-    .form-container {
-      background: #fff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 320px;
-      text-align: center;
+    .container {
+        width: 100%;
+        max-width: 600px;
+        margin: auto;
     }
 
-    .form-container h2 {
-      margin-bottom: 20px;
-      color: #333;
+    .header {
+        background: #007bff;
+        color: white;
+        padding: 25px;
+        border-radius: 15px 15px 0 0;
+        text-align: center;
     }
 
-    .form-container input[type="number"],
-    .form-container input[type="date"] {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      outline: none;
-      transition: border-color 0.3s;
+    .header h1 {
+        margin: 0;
+        font-size: 26px;
     }
 
-    .form-container input:focus {
-      border-color: #007bff;
+    .header p {
+        margin: 8px 0 0;
+        opacity: 0.9;
+        font-size: 14px;
     }
 
-    .form-container button {
-      background: #007bff;
-      color: #fff;
-      border: none;
-      padding: 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.3s;
-      width: 100%;
-      font-size: 16px;
+    .card {
+        background: white;
+        padding: 30px;
+        border-radius: 0 0 15px 15px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
     }
 
-    .form-container button:hover {
-      background: #0056b3;
+    .current-session {
+        background: #f8f9fa;
+        border: 1px solid #e1e5e9;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+
+    .current-session h2 {
+        margin-top: 0;
+        font-size: 18px;
+        color: #333;
+    }
+
+    .session-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .session-info:last-child {
+        border-bottom: none;
+    }
+
+    .session-label {
+        color: #666;
+        font-size: 14px;
+    }
+
+    .session-value {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .status-open {
+        color: #198754;
+        background: #d1e7dd;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .status-closed {
+        color: #dc3545;
+        background: #f8d7da;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .form-title {
+        font-size: 20px;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 7px;
+        font-weight: bold;
+        font-size: 14px;
+        color: #444;
+    }
+
+    input,
+    select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 7px;
+        font-size: 15px;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus,
+    select:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    }
+
+    .help-text {
+        display: block;
+        margin-top: 5px;
+        color: #888;
+        font-size: 12px;
+    }
+
+    .update-btn {
+        width: 100%;
+        padding: 13px;
+        border: none;
+        border-radius: 7px;
+        background: #007bff;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .update-btn:hover {
+        background: #0056b3;
     }
 
     .alert {
-      padding: 10px;
-      margin-bottom: 15px;
-      border-radius: 5px;
-      font-size: 14px;
+        padding: 12px;
+        margin-bottom: 20px;
+        border-radius: 7px;
+        font-size: 14px;
     }
-    .alert-success { background-color: #d4edda; color: #155724; }
-    .alert-danger { background-color: #f8d7da; color: #721c24; }
-    .alert-warning { background-color: #fff3cd; color: #856404; }
-  </style>
-</head>
-<body>
-  <div class="form-container">
-    <h2>Update Semester & Year</h2>
+
+    .alert-success {
+        background-color: #d1e7dd;
+        color: #0f5132;
+    }
+
+    .alert-error,
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #842029;
+    }
+
+    .alert-warning {
+        background-color: #fff3cd;
+        color: #664d03;
+    }
+
+    .logout {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .logout a {
+        color: #dc3545;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .logout a:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 500px) {
+
+        body {
+            padding: 15px;
+        }
+
+        .card {
+            padding: 22px;
+        }
+
+        .header {
+            padding: 20px;
+        }
+
+        .header h1 {
+            font-size: 22px;
+        }
+
+        .session-info {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+    }
+</style>
+
+</head> <body> <div class="container">
+<div class="header">
+
+    <h1>
+        Academic Session Management
+    </h1>
+
+    <p>
+        TaTU School Management System
+    </p>
+
+</div>
+
+
+<div class="card">
+
+
+    <!-- FLASH MESSAGES -->
 
     {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <div class="alert alert-{{ category }}">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
+
+        {% if messages %}
+
+            {% for category, message in messages %}
+
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
     {% endwith %}
 
-<form method="POST" action="{{ url_for('admin.admin_update') }}">
-  <input type="number" name="semester" min =1 placeholder="New Semester">
-  <input type="number" name="years" placeholder="Enter the year only" required>
-  <button type="submit">Update</button>
-</form>
 
 
-  </div>
-</body>
-</html>
+    <!-- CURRENT SESSION -->
+
+    <div class="current-session">
+
+        <h2>
+            Current Academic Session
+        </h2>
+
+
+        {% if current_session %}
+
+
+            <div class="session-info">
+
+                <span class="session-label">
+                    Academic Year
+                </span>
+
+                <span class="session-value">
+                    {{ current_session.academic_year }}
+                </span>
+
+            </div>
+
+
+            <div class="session-info">
+
+                <span class="session-label">
+                    Semester
+                </span>
+
+                <span class="session-value">
+                    Semester {{ current_session.semester }}
+                </span>
+
+            </div>
+
+
+            <div class="session-info">
+
+                <span class="session-label">
+                    Registration
+                </span>
+
+
+                {% if current_session.registration_open %}
+
+                    <span class="status-open">
+                        OPEN
+                    </span>
+
+                {% else %}
+
+                    <span class="status-closed">
+                        CLOSED
+                    </span>
+
+                {% endif %}
+
+
+            </div>
+
+
+        {% else %}
+
+
+            <p style="color:#888;">
+                No academic session has been configured yet.
+            </p>
+
+
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- CHANGE SESSION -->
+
+    <h2 class="form-title">
+        Change Academic Session
+    </h2>
+
+
+    <form method="POST"
+          action="{{ url_for('admin.admin_update') }}">
+
+
+        <!-- ACADEMIC YEAR -->
+
+        <div class="form-group">
+
+            <label for="years">
+                Academic Year
+            </label>
+
+
+            <input
+                type="text"
+                id="years"
+                name="years"
+                placeholder="Example: 2026/2027"
+                value="{% if current_session %}{{ current_session.academic_year }}{% endif %}"
+                required
+            >
+
+
+            <span class="help-text">
+                Enter the academic year, for example 2026/2027.
+            </span>
+
+        </div>
+
+
+
+        <!-- SEMESTER -->
+
+        <div class="form-group">
+
+            <label for="semester">
+                Semester
+            </label>
+
+
+            <select
+                id="semester"
+                name="semester"
+                required
+            >
+
+                <option value="">
+                    Select Semester
+                </option>
+
+
+                <option
+                    value="1"
+                    {% if current_session and current_session.semester == 1 %}
+                        selected
+                    {% endif %}
+                >
+                    Semester 1
+                </option>
+
+
+                <option
+                    value="2"
+                    {% if current_session and current_session.semester == 2 %}
+                        selected
+                    {% endif %}
+                >
+                    Semester 2
+                </option>
+
+            </select>
+
+        </div>
+
+
+
+        <!-- SUBMIT -->
+
+        <button
+            type="submit"
+            class="update-btn"
+        >
+            Open Course Registration
+        </button>
+
+
+    </form>
+
+</div>
+
+</div> </body> </html>
