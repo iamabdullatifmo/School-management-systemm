@@ -65,7 +65,7 @@ app.register_blueprint(admin_bp,url_prefix="")
 app.register_blueprint(admin_update_api, url_prefix="")
 
 
-app.config["SQLALCHEMY_DATABASE_URI"] ="mysql+pymysql://management:12345@localhost/python"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]= False
 app.config["SESSION_PERMANENT"] = False
 
