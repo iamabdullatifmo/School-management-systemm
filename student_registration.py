@@ -1,13 +1,15 @@
-from flask import Blueprint,render_template,request,flash,redirect,url_for,session
-from models import Student,Department,YearsOfStudy
-from extentions import db,mail
-from flask_mail import Message
+from flask import Blueprint, render_template, request, flash, redirect, url_for
+from models import Student, Department, YearsOfStudy
+from extentions import db
 
-register_student_bp = Blueprint("register_student",__name__)
+register_student_bp = Blueprint("register_student", __name__)
+
 
 @register_student_bp.route("/registerStudent", methods=["POST", "GET"])
 def register_student():
+
     if request.method == "POST":
+
         first_N = request.form.get("first")
         last_N = request.form.get("last")
         email = request.form.get("email")
@@ -40,7 +42,7 @@ def register_student():
         db.session.add(years)
         db.session.commit()
 
-        # Update department
+        # Find department
         dept = Department.query.filter_by(
             dept_name=user.department
         ).first()
@@ -48,34 +50,6 @@ def register_student():
         if dept:
             dept._id = user._id
             db.session.commit()
-
-        # Send email separately
-        try:
-            msg = Message(
-                subject="School Management",
-                recipients=[user.email]
-            )
-
-            msg.html = f"""
-            Hi {user.full_Name},<br><br>
-
-            Welcome to TaTU institution.<br><br>
-
-            <p>This is your temporary password: {user.password}</p>
-            <p>This is your ID: {user._id}</p>
-
-            <p>
-            Login with the ID and password given to you
-            and change the password to your preferred password.
-            </p>
-            """
-
-            mail.send(msg)
-
-            print("Registration email sent successfully")
-
-        except Exception as e:
-            print("EMAIL ERROR:", repr(e))
 
         flash(
             "Registration was successful. "
