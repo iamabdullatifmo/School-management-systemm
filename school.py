@@ -77,15 +77,11 @@ mail.init_app(app)
 @app.route("/home")
 @app.route("/")
 def home():
-    msg = Message(subject="School management",recipients=['touhirabubakr8437@gmail.com'])
-    msg.body = " Dear customer you are Welcome to TaTU school system "
-    mail.send(msg)
-   # return "message was sent"
+    
     return render_template("index.html")
    
-    
-with app.app_context():
-    db.create_all()
+if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
 
-if __name__=="__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
