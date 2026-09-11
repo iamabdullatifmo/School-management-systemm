@@ -5,11 +5,17 @@ BIRD_API_KEY = os.getenv("BIRD_API_KEY")
 
 
 def send_email(to_email, subject, html):
+    print("BIRD KEY EXISTS:", bool(BIRD_API_KEY))
+    print(
+    "BIRD KEY PREFIX:",
+    BIRD_API_KEY[:7] if BIRD_API_KEY else "MISSING"
+)
 
-    url = "https://api.bird.com/email/messages"
+
+    url = "https://us1.platform.bird.com/v1/email/messages"
 
     headers = {
-        "Authorization": f"AccessKey {BIRD_API_KEY}",
+       "Authorization": f"Bearer {BIRD_API_KEY}",
         "Content-Type": "application/json"
     }
 
@@ -37,6 +43,7 @@ def send_email(to_email, subject, html):
         response.raise_for_status()
 
         return True
+    
 
     except requests.RequestException as e:
         print("BIRD EMAIL ERROR:", repr(e))
