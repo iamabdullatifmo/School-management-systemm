@@ -8,18 +8,20 @@ admin_bp = Blueprint("admin", __name__)
 @admin_bp.route("/admin", methods=["POST", "GET"])
 def admin_page():
     if request.method == "POST":
-        
+
         admin_password = request.form.get("password")
 
-        admin = Admin.query.filter_by(password=admin_password).first()
-        if not admin:
+        admin = Admin.query.first()
+
+        if not admin or admin.password != admin_password:
             flash("Invalid admin password.", "error")
             return redirect(url_for("admin.admin_page"))
+
         session["admin"] = admin.name
-        #session["admin"] = True
+
         return redirect(url_for("admin.admin_update"))
 
-    return render_template("admin.html")    
+    return render_template("admin.html")
 
 @admin_bp.route("/admin_update", methods=["POST", "GET"])
 def admin_update():
