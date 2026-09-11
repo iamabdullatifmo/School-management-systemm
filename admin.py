@@ -4,7 +4,6 @@ from extentions import db
 
 admin_bp = Blueprint("admin", __name__)
 
-
 @admin_bp.route("/admin", methods=["POST", "GET"])
 def admin_page():
     if request.method == "POST":
@@ -17,17 +16,19 @@ def admin_page():
             flash("Invalid admin password.", "error")
             return redirect(url_for("admin.admin_page"))
 
-        session["admin"] = admin.name
+        # Login successful
+        session["admin_logged_in"] = True
+        session["admin_name"] = admin.name
 
         return redirect(url_for("admin.admin_update"))
 
     return render_template("admin.html")
 
+
 @admin_bp.route("/admin_update", methods=["POST", "GET"])
 def admin_update():
 
-    # Make sure admin is logged in
-    if not session.get("admin"):
+    if not session.get("admin_logged_in"):
         flash("Please login as admin first.", "error")
         return redirect(url_for("admin.admin_page"))
 
@@ -36,29 +37,22 @@ def admin_update():
         new_semester = request.form.get("semester", type=int)
         new_year = request.form.get("years")
 
-        # Validate semester
         if new_semester not in [1, 2]:
             flash("Please select a valid semester.", "error")
             return redirect(url_for("admin.admin_update"))
 
-        # Validate academic year
         if not new_year:
             flash("Please select an academic year.", "error")
             return redirect(url_for("admin.admin_update"))
 
-        # Find the current academic session
         academic_session = AcademicSession.query.first()
 
         if academic_session:
-
-            # Update existing session
             academic_session.academic_year = new_year
             academic_session.semester = new_semester
             academic_session.registration_open = True
 
         else:
-
-            # Create session if one doesn't exist
             academic_session = AcademicSession(
                 academic_year=new_year,
                 semester=new_semester,
@@ -77,7 +71,6 @@ def admin_update():
 
         return redirect(url_for("admin.admin_update"))
 
-    # Get current session to display on the page
     current_session = AcademicSession.query.first()
 
     return render_template(
