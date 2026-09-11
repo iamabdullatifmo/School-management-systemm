@@ -9,8 +9,7 @@ def admin_page():
     if request.method == "POST":
 
         admin_password = request.form.get("password")
-
-        admin = Admin.query.first()
+        admin = Admin.query.filter_by(password=admin_password).first()
 
         if not admin or admin.password != admin_password:
             flash("Invalid admin password.", "error")
