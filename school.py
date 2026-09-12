@@ -78,6 +78,27 @@ mail.init_app(app)
 @app.route("/home")
 @app.route("/")
 def home():
+
+@app.route("/test-email")
+def test_email():
+    try:
+        msg = Message(
+            subject="Test Email",
+            recipients=[os.getenv("MAIL_USERNAME")]
+        )
+
+        msg.body = "This is a test email."
+
+        mail.send(msg)
+
+        print("EMAIL SENT SUCCESSFULLY", flush=True)
+
+        return "Email sent successfully!"
+
+    except Exception as e:
+        print("EMAIL ERROR:", repr(e), flush=True)
+        return f"Email failed: {e}", 500
+
     
     return render_template("index.html")
    
