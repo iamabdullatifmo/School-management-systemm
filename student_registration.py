@@ -5,119 +5,46 @@ from flask_mail import Message
 
 register_student_bp = Blueprint("register_student",__name__)
 
-@register_student_bp.route("/registerStudent", methods=["GET", "POST"])
+
+@register_student_bp.route("/registerStudent",methods=["POST","GET"])
 def register_student():
+    if request.method == "POST":
+        first_N=request.form.get("first")
+        last_N=request.form.get("last")
+        email=request.form.get("email")
+        full_N=first_N + " " + last_N
+        department = request.form.get("department")
+        years_of_study = int(request.form.get("years_of_study"))
 
-    if request.method == "GET":
-        return render_template("regiater_student.html")
-
-    # Get form data
-    first_N = request.form.get("first")
-    last_N = request.form.get("last")
-    email = request.form.get("email")
-    department = request.form.get("department")
-    years_of_study_raw = request.form.get("years_of_study")
-
-    # Validate required fields
-    if not first_N or not last_N or not email or not department:
-        flash("Please fill in all required fields.")
-        return redirect(url_for("register_student.register_student"))
-
-    # Validate years
-    try:
-        years_of_study = int(years_of_study_raw)
-    except (TypeError, ValueError):
-        flash("Invalid years of study.")
-        return redirect(url_for("register_student.register_student"))
-
-    full_N = f"{first_N} {last_N}"
-    level = 100
-
-    try:
-        # Find department
-        dept = Department.query.filter_by(
-            dept_name=department
-        ).first()
-
-
-
-        # Create student
-        user = Student(
-            first_N=first_N,
-            last_N=last_N,
-            email=email,
-            full_Name=full_N,
-            department=department
-        )
-
+        level = 100
+    
+        user = Student(first_N=first_N,last_N=last_N,email=email,full_Name=full_N,department=department)
         db.session.add(user)
-        db.session.flush()
-
-        # Create years-of-study record
-        years = YearsOfStudy(
-            student_id=user._id,
-            years_of_study=years_of_study,
-            semester=1,
-            level=level
-        )
-
-        db.session.add(years)
-
-        # Save database changes
         db.session.commit()
 
-        # Send email AFTER successful DB transaction
-        msg = Message(
-            subject="School Management",
-            recipients=[user.email]
-        )
-
+        msg = Message(subject='School Mangement',recipients=[user.email] )
         msg.html = f"""
-        Hi {user.full_Name},<br><br>
+                    Hi {user.full_Name},<br>
+                    Welcome to TaTU institution.<br>
+                    <p>This is your temporary password: {user.password}</p>
+                    <p>This is your ID: {user._id}</p>
+                    <p>Login with the ID and the password and change the password with your preferred password</p>
 
-        Welcome to TaTU institution.<br><br>
-
-        <p>This is your temporary password: {user.password}</p>
-        <p>This is your ID: {user._id}</p>
-
-        <p>
-        Login with the ID and password given to you
-        and change the password to your preferred password.
-        </p>
-        """
-
+                    """
         mail.send(msg)
-
-        flash(
-            "Registration was successful. "
-            "Login with the ID and password given to you "
-            "and change your password."
-        )
-
+        flash("Registration was successfully.Login with the ID and password given to you and change the password")
+        # query and check the department table whose department name matches with the department the student chooses
+        dept = Department.query.filter_by(dept_name=user.department).first()
+        student_id = session.get("student_id")
+        years= YearsOfStudy(student_id=user._id,years_of_study=years_of_study,semester=1,level = level)
+        db.session.add(years)
+        db.session.commit()
+        # Store the department _id as the same of student _id
+        if dept:
+         dept._id = user._id
+         db.session.commit()
+        
         return redirect(url_for("login.login_S"))
+    return render_template("regiater_student.html")
 
-    except Exception as e:
-        db.session.rollback()
 
-        print("REGISTRATION ERROR:", repr(e), flush=True)
-
-        flash("Registration failed. Please try again.")
-        return redirect(url_for("register_student.register_student"))
-@app.route("/test-email")
-def test_email():
-    try:
-        msg = Message(
-            subject="Test Email",
-            recipients=[os.getenv("MAIL_USERNAME")]
-        )
-
-        msg.body = "This is a test email."
-
-        mail.send(msg)
-
-        return "Email sent successfully!"
-
-    except Exception as e:
-        print("EMAIL ERROR:", repr(e), flush=True)
-        return f"Email failed: {e}", 500
-    
