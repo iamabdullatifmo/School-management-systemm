@@ -39,9 +39,7 @@ def register_student():
             dept_name=department
         ).first()
 
-        if not dept:
-            flash("Selected department does not exist.")
-            return redirect(url_for("register_student.register_student"))
+
 
         # Create student
         user = Student(
