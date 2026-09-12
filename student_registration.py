@@ -103,3 +103,21 @@ def register_student():
 
         flash("Registration failed. Please try again.")
         return redirect(url_for("register_student.register_student"))
+@app.route("/test-email")
+def test_email():
+    try:
+        msg = Message(
+            subject="Test Email",
+            recipients=[os.getenv("MAIL_USERNAME")]
+        )
+
+        msg.body = "This is a test email."
+
+        mail.send(msg)
+
+        return "Email sent successfully!"
+
+    except Exception as e:
+        print("EMAIL ERROR:", repr(e), flush=True)
+        return f"Email failed: {e}", 500
+    
