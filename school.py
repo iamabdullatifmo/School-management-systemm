@@ -78,7 +78,9 @@ mail.init_app(app)
 @app.route("/home")
 @app.route("/")
 def home():
-
+    
+    
+    return render_template("index.html")
 @app.route("/test-email")
 def test_email():
     try:
@@ -99,8 +101,6 @@ def test_email():
         print("EMAIL ERROR:", repr(e), flush=True)
         return f"Email failed: {e}", 500
 
-    
-    return render_template("index.html")
    
 if __name__ == "__main__":
     with app.app_context():
