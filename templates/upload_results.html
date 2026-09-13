@@ -158,21 +158,50 @@
         margin: 0 !important;
     }
 
-    @media (max-width: 768px) {
-        .container {
-            margin: 10px;
-            padding: 20px;
-        }
+    .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
 
-        table {
-            font-size: 13px;
-        }
+.table-wrapper table {
+    min-width: 750px;
+    width: max-content;
+}
 
-        th,
-        td {
-            padding: 8px;
-        }
+
+.table-wrapper th,
+.table-wrapper td {
+    white-space: nowrap;
+}
+
+   @media (max-width: 768px) {
+    .container {
+        margin: 10px;
+        padding: 15px;
+        width: calc(100% - 20px);
     }
+
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table-wrapper table {
+        min-width: 750px;
+    }
+
+    table {
+        font-size: 13px;
+    }
+
+    th,
+    td {
+        padding: 8px;
+    }
+}
+
 </style>
 
 </head> <body> <div class="container">
@@ -497,9 +526,12 @@
             <strong>{{ course }}</strong>.
         </div>
 
-        <table>
+                <div class="table-wrapper">
 
-            <thead>
+            <table>
+
+                <thead>
+
                 <tr>
                     <th>#</th>
                     <th>Student ID</th>
@@ -574,7 +606,9 @@
 
             </tbody>
 
-        </table>
+                   </table>
+
+        </div>
 
         <!-- =================================================
              SAVE GRADES
