@@ -83,23 +83,34 @@ def home():
     return render_template("index.html")
 @app.route("/test-email")
 def test_email():
+    print("TEST EMAIL: route started", flush=True)
+
     try:
+        username = os.getenv("MAIL_USERNAME")
+        password = os.getenv("MAIL_PASSWORD")
+
+        print("MAIL_USERNAME exists:", bool(username), flush=True)
+        print("MAIL_PASSWORD exists:", bool(password), flush=True)
+
         msg = Message(
             subject="Test Email",
-            recipients=[os.getenv("MAIL_USERNAME")]
+            sender=username,
+            recipients=[username]
         )
 
-        msg.body = "This is a test email."
+        msg.body = "This is a test email from your AWS EC2 Flask server."
+
+        print("TEST EMAIL: before mail.send()", flush=True)
 
         mail.send(msg)
 
-        print("EMAIL SENT SUCCESSFULLY", flush=True)
+        print("TEST EMAIL: mail.send() completed", flush=True)
 
-        return "Email sent successfully!"
+        return "Email sent successfully!", 200
 
     except Exception as e:
-        print("EMAIL ERROR:", repr(e), flush=True)
-        return f"Email failed: {e}", 500
+        print("TEST EMAIL ERROR:", repr(e), flush=True)
+        return f"Email failed: {type(e).__name__}: {e}", 500
 
    
 if __name__ == "__main__":

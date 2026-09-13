@@ -1,109 +1,614 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Upload Results</title>
-  <style>
-    body { font-family: 'Segoe UI', Arial, sans-serif; background:#f0f2f5; margin:0; padding:0; }
-    .container { max-width:1000px; margin:40px auto; background:#fff; padding:30px; border-radius:10px; box-shadow:0 6px 12px rgba(0,0,0,.1); }
-    h1, h2 { text-align:center; color:#333; margin-bottom:20px; }
-    label { font-weight:600; margin-top:15px; display:block; color:#444; }
-    select, input[type="text"], button {
-      width:100%; padding:10px; margin-top:8px; margin-bottom:20px;
-      border-radius:6px; border:1px solid #ccc; font-size:14px;
+<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Upload Results</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background: #f0f2f5;
+        margin: 0;
+        padding: 0;
     }
-    button { background:#007bff; color:#fff; font-weight:bold; cursor:pointer; transition:background .3s ease; }
-    button:hover { background:#0056b3; }
-    table { width:100%; border-collapse:collapse; margin-top:20px; }
-    th, td { padding:10px; border-bottom:1px solid #eee; text-align:left; }
-    th { background:#007bff; color:#fff; }
-    .messages { margin:15px 0; padding:12px 16px; border-radius:6px; font-weight:500; }
-    .messages.success { background:#d4edda; color:#155724; border:1px solid #c3e6cb; }
-    .messages.error { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
-    .pending { color:#e74c3c; font-weight:bold; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Upload Results</h1>
 
-    <!-- Flash messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
+    .container {
+        max-width: 1100px;
+        margin: 40px auto;
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    }
+
+    h1,
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: 600;
+        margin-top: 15px;
+        display: block;
+        color: #444;
+    }
+
+    select,
+    input[type="number"],
+    button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 8px;
+        margin-bottom: 20px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+
+    select:focus,
+    input:focus {
+        outline: none;
+        border-color: #007bff;
+    }
+
+    button {
+        background: #007bff;
+        color: #ffffff;
+        font-weight: bold;
+        cursor: pointer;
+        border: none;
+        transition: background 0.3s ease;
+    }
+
+    button:hover {
+        background: #0056b3;
+    }
+
+    .save-button {
+        background: #28a745;
+    }
+
+    .save-button:hover {
+        background: #1e7e34;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th,
+    td {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+        text-align: left;
+    }
+
+    th {
+        background: #007bff;
+        color: #ffffff;
+    }
+
+    tr:hover {
+        background: #f8f9fa;
+    }
+
+    .messages {
+        margin: 15px 0;
+        padding: 12px 16px;
+        border-radius: 6px;
+        font-weight: 500;
+    }
+
+    .messages.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .messages.error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .pending {
+        color: #e74c3c;
+        font-weight: bold;
+    }
+
+    .grade-present {
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    .student-count {
+        margin-top: 15px;
+        padding: 12px;
+        background: #e9f5ff;
+        border-left: 4px solid #007bff;
+        color: #333;
+    }
+
+    .no-students {
+        margin-top: 25px;
+        padding: 20px;
+        background: #fff3cd;
+        border: 1px solid #ffeeba;
+        border-radius: 6px;
+        color: #856404;
+        text-align: center;
+    }
+
+    .course-info {
+        margin-top: -10px;
+        margin-bottom: 20px;
+        color: #666;
+        font-size: 13px;
+    }
+
+    .grade-input {
+        width: 120px !important;
+        margin: 0 !important;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            margin: 10px;
+            padding: 20px;
+        }
+
+        table {
+            font-size: 13px;
+        }
+
+        th,
+        td {
+            padding: 8px;
+        }
+    }
+</style>
+
+</head> <body> <div class="container">
+<h1>Upload Results</h1>
+
+<!-- =========================================================
+     FLASH MESSAGES
+     ========================================================= -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
         {% for category, message in messages %}
-          <div class="messages {{ category }}">{{ message }}</div>
+            <div class="messages {{ category }}">
+                {{ message }}
+            </div>
         {% endfor %}
-      {% endif %}
-    {% endwith %}
+    {% endif %}
+{% endwith %}
 
-    <!-- Department & Course selection -->
-    <form method="POST" action="{{ url_for('upload_results.upload_results_view') }}">
-      <label for="department">Select Department:</label>
-      <select name="department" id="department">
-        <option value="Computer Science">Computer Science</option>
-        <option value="Engineering">Engineering</option>
-        <option value="Electricals">Electricals</option>
-      </select>
+<!-- =========================================================
+     MAIN FORM
+     ========================================================= -->
+<form method="POST"
+      action="{{ url_for('upload_results.upload_results_view') }}">
 
-      <label for="select_course">Select Course:</label>
-      <select name="course" id="select_course">
-        <option value="CSE101">CSE101 - Introduction to Computer Science</option>
-        <option value="MAT102">MAT102 - Calculus I</option>
-        <option value="PHY103">PHY103 - Physics I</option>
-        <option value="ENG104">ENG104 - English Composition</option>
-        <option value="DBS201">DBS201 - Database Systems</option>
-        <option value="WEB202">WEB202 - Web Development</option>
-        <option value="AI301">AI301 - Artificial Intelligence</option>
-      </select>
+    <!-- =====================================================
+         DEPARTMENT
+         ===================================================== -->
+    <label for="department">
+        Select Department:
+    </label>
 
-      <button type="submit">Fetch Students</button>
-    </form>
+    <select name="department"
+            id="department"
+            required>
 
-    <!-- Student list & grade inputs -->
+        <option value="">
+            -- Select Department --
+        </option>
+
+        <option value="Computer Science"
+            {% if department == "Computer Science" %}
+                selected
+            {% endif %}>
+            Computer Science
+        </option>
+
+        <option value="Engineering"
+            {% if department == "Engineering" %}
+                selected
+            {% endif %}>
+            Engineering
+        </option>
+
+        <option value="Electricals"
+            {% if department == "Electricals" %}
+                selected
+            {% endif %}>
+            Electricals
+        </option>
+
+    </select>
+
+    <!-- =====================================================
+         COURSE
+         ===================================================== -->
+
+    <label for="course">
+        Select Course:
+    </label>
+
+    <select name="course"
+            id="course"
+            required>
+
+        <option value="">
+            -- Select Course --
+        </option>
+
+        <!-- COMPUTER SCIENCE -->
+        <optgroup label="Computer Science">
+
+            <option value="CSC101"
+                {% if course == "CSC101" %}selected{% endif %}>
+                CSC101 - Introduction to Computer Science
+            </option>
+
+            <option value="CSC102"
+                {% if course == "CSC102" %}selected{% endif %}>
+                CSC102 - Computer Programming I
+            </option>
+
+            <option value="CSC103"
+                {% if course == "CSC103" %}selected{% endif %}>
+                CSC103 - Computer Programming II
+            </option>
+
+            <option value="CSC104"
+                {% if course == "CSC104" %}selected{% endif %}>
+                CSC104 - Digital Logic Design
+            </option>
+
+            <option value="CSC105"
+                {% if course == "CSC105" %}selected{% endif %}>
+                CSC105 - Computer Hardware and Architecture
+            </option>
+
+            <option value="CSC106"
+                {% if course == "CSC106" %}selected{% endif %}>
+                CSC106 - Discrete Mathematics
+            </option>
+
+            <option value="CSC107"
+                {% if course == "CSC107" %}selected{% endif %}>
+                CSC107 - Introduction to Information Technology
+            </option>
+
+            <option value="CSC108"
+                {% if course == "CSC108" %}selected{% endif %}>
+                CSC108 - Web Design and Development
+            </option>
+
+            <option value="CSC109"
+                {% if course == "CSC109" %}selected{% endif %}>
+                CSC109 - Database Fundamentals
+            </option>
+
+            <option value="CSC110"
+                {% if course == "CSC110" %}selected{% endif %}>
+                CSC110 - Communication Skills for Computing
+            </option>
+
+            <option value="CSC201"
+                {% if course == "CSC201" %}selected{% endif %}>
+                CSC201 - Data Structures and Algorithms
+            </option>
+
+            <option value="CSC202"
+                {% if course == "CSC202" %}selected{% endif %}>
+                CSC202 - Object-Oriented Programming
+            </option>
+
+            <option value="CSC203"
+                {% if course == "CSC203" %}selected{% endif %}>
+                CSC203 - Database Management Systems
+            </option>
+
+            <option value="CSC204"
+                {% if course == "CSC204" %}selected{% endif %}>
+                CSC204 - Operating Systems
+            </option>
+
+            <option value="CSC205"
+                {% if course == "CSC205" %}selected{% endif %}>
+                CSC205 - Computer Networks
+            </option>
+
+            <option value="CSC206"
+                {% if course == "CSC206" %}selected{% endif %}>
+                CSC206 - Software Engineering
+            </option>
+
+            <option value="CSC207"
+                {% if course == "CSC207" %}selected{% endif %}>
+                CSC207 - Web Application Development
+            </option>
+
+            <option value="CSC208"
+                {% if course == "CSC208" %}selected{% endif %}>
+                CSC208 - Systems Analysis and Design
+            </option>
+
+            <option value="CSC209"
+                {% if course == "CSC209" %}selected{% endif %}>
+                CSC209 - Computer Organization
+            </option>
+
+            <option value="CSC210"
+                {% if course == "CSC210" %}selected{% endif %}>
+                CSC210 - Probability and Statistics for Computing
+            </option>
+
+        </optgroup>
+
+        <!-- ELECTRICAL -->
+        <optgroup label="Electrical Engineering">
+
+            <option value="ELE101"
+                {% if course == "ELE101" %}selected{% endif %}>
+                ELE101 - Electrical Engineering Mathematics I
+            </option>
+
+            <option value="ELE102"
+                {% if course == "ELE102" %}selected{% endif %}>
+                ELE102 - Electrical Engineering Mathematics II
+            </option>
+
+            <option value="ELE103"
+                {% if course == "ELE103" %}selected{% endif %}>
+                ELE103 - Basic Electrical Engineering
+            </option>
+
+            <option value="ELE104"
+                {% if course == "ELE104" %}selected{% endif %}>
+                ELE104 - Electrical Circuit Theory I
+            </option>
+
+            <option value="ELE105"
+                {% if course == "ELE105" %}selected{% endif %}>
+                ELE105 - Electrical Measurements and Instrumentation
+            </option>
+
+            <option value="ELE106"
+                {% if course == "ELE106" %}selected{% endif %}>
+                ELE106 - Electrical Workshop Practice I
+            </option>
+
+            <option value="ELE107"
+                {% if course == "ELE107" %}selected{% endif %}>
+                ELE107 - Engineering Drawing for Electrical Engineers
+            </option>
+
+            <option value="ELE108"
+                {% if course == "ELE108" %}selected{% endif %}>
+                ELE108 - Introduction to Electronics
+            </option>
+
+            <option value="ELE109"
+                {% if course == "ELE109" %}selected{% endif %}>
+                ELE109 - Digital Logic Fundamentals
+            </option>
+
+            <option value="ELE110"
+                {% if course == "ELE110" %}selected{% endif %}>
+                ELE110 - Electrical Engineering Laboratory I
+            </option>
+
+        </optgroup>
+
+        <!-- ENGINEERING -->
+        <optgroup label="Engineering">
+
+            <option value="ENG101"
+                {% if course == "ENG101" %}selected{% endif %}>
+                ENG101 - Engineering Mathematics I
+            </option>
+
+            <option value="ENG102"
+                {% if course == "ENG102" %}selected{% endif %}>
+                ENG102 - Engineering Physics I
+            </option>
+
+            <option value="ENG103"
+                {% if course == "ENG103" %}selected{% endif %}>
+                ENG103 - Engineering Chemistry
+            </option>
+
+            <option value="ENG104"
+                {% if course == "ENG104" %}selected{% endif %}>
+                ENG104 - Engineering Drawing
+            </option>
+
+            <option value="ENG105"
+                {% if course == "ENG105" %}selected{% endif %}>
+                ENG105 - Introduction to Engineering
+            </option>
+
+            <option value="ENG106"
+                {% if course == "ENG106" %}selected{% endif %}>
+                ENG106 - Computer Applications in Engineering
+            </option>
+
+            <option value="ENG107"
+                {% if course == "ENG107" %}selected{% endif %}>
+                ENG107 - Workshop Technology I
+            </option>
+
+            <option value="ENG108"
+                {% if course == "ENG108" %}selected{% endif %}>
+                ENG108 - Technical Communication
+            </option>
+
+            <option value="ENG109"
+                {% if course == "ENG109" %}selected{% endif %}>
+                ENG109 - Engineering Mechanics I
+            </option>
+
+            <option value="ENG110"
+                {% if course == "ENG110" %}selected{% endif %}>
+                ENG110 - Electrical Engineering Fundamentals
+            </option>
+
+        </optgroup>
+
+    </select>
+
+    <div class="course-info">
+        Select the department and the exact course code
+        registered by the students.
+    </div>
+
+    <!-- =====================================================
+         FETCH BUTTON
+         ===================================================== -->
+
+    <button type="submit"
+            name="fetch_students"
+            value="1">
+        Fetch Registered Students
+    </button>
+
+    <!-- =====================================================
+         STUDENTS
+         ===================================================== -->
+
     {% if students %}
-      <h2>Update Grades</h2>
-      <form method="POST" action="{{ url_for('upload_results.upload_results_view') }}">
-        <input type="hidden" name="department" value="{{ request.form.get('department') or request.args.get('department') }}">
-        <input type="hidden" name="course" value="{{ request.form.get('course') or request.args.get('course') }}">
+
+        <h2>Registered Students</h2>
+
+        <div class="student-count">
+            <strong>{{ students|length }}</strong>
+            student(s) registered for
+            <strong>{{ course }}</strong>.
+        </div>
 
         <table>
-          <thead>
-            <tr>
-              <th>Student Name</th>
-              <th>Email</th>
-              <th>Current Grade</th>
-              <th>Update Grade</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for student in students %}
-              {% set existing_grade = None %}
-              {% for g in grades %}
-                {% if g.student_id == student._id %}
-                  {% set existing_grade = g.grade %}
-                {% endif %}
-              {% endfor %}
-              <tr>
-                <td>{{ student.full_Name }}</td>
-                <td>{{ student.email }}</td>
-                <td>
-                  {% if existing_grade %}
-                    {{ existing_grade }}
-                  {% else %}
-                    <span class="pending">Pending</span>
-                  {% endif %}
-                </td>
-                <td>
-                  <input type="hidden" name="student_id_{{ student._id }}" value="{{ student._id }}">
-                  <input type="text" name="grade_{{ student._id }}" value="{{ existing_grade if existing_grade else '' }}" placeholder="Enter grade">
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
+
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Student ID</th>
+                    <th>Student Name</th>
+                    <th>Email</th>
+                    <th>Current Grade</th>
+                    <th>New Grade</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for student in students %}
+
+                    {% set existing_grade =
+                        grade_map.get(student._id) %}
+
+                    <tr>
+
+                        <td>
+                            {{ loop.index }}
+                        </td>
+
+                        <td>
+                            {{ student._id }}
+                        </td>
+
+                        <td>
+                            {{ student.full_Name }}
+                        </td>
+
+                        <td>
+                            {{ student.email }}
+                        </td>
+
+                        <td>
+
+                            {% if existing_grade is not none %}
+
+                                <span class="grade-present">
+                                    {{ existing_grade }}
+                                </span>
+
+                            {% else %}
+
+                                <span class="pending">
+                                    Pending
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <input
+                                class="grade-input"
+                                type="number"
+                                name="grade_{{ student._id }}"
+                                min="0"
+                                max="100"
+                                step="0.01"
+                                value="{{ existing_grade if existing_grade is not none else '' }}"
+                                placeholder="Grade"
+                            >
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+            </tbody>
+
         </table>
-        <button type="submit">Save Changes</button>
-      </form>
+
+        <!-- =================================================
+             SAVE GRADES
+             ================================================= -->
+
+        <button
+            type="submit"
+            name="save_grades"
+            value="1"
+            class="save-button">
+            Save Grades
+        </button>
+
+    {% elif department and course %}
+
+        <!-- =================================================
+             NO REGISTERED STUDENTS
+             ================================================= -->
+
+        <div class="no-students">
+
+            <strong>
+                No registered students found.
+            </strong>
+
+            <br><br>
+
+            No students have registered for
+            <strong>{{ course }}</strong>
+            under
+            <strong>{{ department }}</strong>.
+
+            <br><br>
+
+            Students must register for this course before
+            the lecturer can upload their results.
+
+        </div>
+
     {% endif %}
-  </div>
-</body>
-</html>
+
+</form>
+
+</div> </body> </html>
